@@ -1,8 +1,8 @@
 from requests import request
 import json
 
-
-get_bin_numbers = request(method='Get', url='https://ppgpayment-test.birlesikodeme.com:20000/api/ppg/Payment/BinList')
+url = 'https://ppgpayment-test.birlesikodeme.com:20000/api/ppg/Payment/BinList'
+get_bin_numbers = request(method='Get', url=url)
 request_json = get_bin_numbers.json()
 request_result = request_json['result']
 real_data = json.dumps(request_result, ensure_ascii=False)
@@ -40,5 +40,9 @@ for a in data_list:
     load_dict[str(a)] = inner_dict
 
 for _ in sorted(load_dict):
-    print(_, load_dict[_])
+    print(_, ':', load_dict[_])
+    for a, b in load_dict[_].items():
+        print(a, b)
+
+# print(load_dict['979300'])
 
