@@ -8,41 +8,95 @@ request_result = request_json['result']
 real_data = json.dumps(request_result, ensure_ascii=False)
 real_data = real_data.strip(' ] ').strip('[ ').split('},')
 data_list = dict()
-a = 1
 
-for _ in real_data:
-    object_string = _.replace('{', '').replace('}', '')
-    object_string = object_string.replace('"', "").replace("'", "").split(',')
-    split_list = list()
-    prefix_name = ''
-    for _ in object_string:
-        item_key = _.split(': ')[0]
-        item_value = _.split(': ')[1]
-        if 'prefixno' in item_key.lower():
-            prefix_name = item_value
-        if str(item_value).replace("'", "") == 'false':
-            item_value = False
-        if str(item_value).replace("'", "") == 'true':
-            item_value = True
 
-        split_list.append([item_key, item_value])
+class BinNumbers:
+    isBusinessCard: bool
+    cardType: str
+    bankName: str
+    prefixNo: int
+    eftCode: str
+    brand: str
+    avoidPreauthInstall: bool
+    avoidAuthInstall: bool
+    network: str
+    brandName: str
+    responseCode: bool
+    responseMessage: bool
 
-    data_list[prefix_name] = list(split_list)
-    a += 1
+    def __repr__(self):
+        return f'isBusinessCard: {0}\ncardType: {1}\nbankName: {2}\nprefixNo: {3}\neftCode: {4}\nbrand: {5}' \
+               f'\navoidPreauthInstall: {6}\navoidAuthInstall: {7}\nnetwork: {8}\nbrandName: {9}\nresponseCode: ' \
+               f'{10}\nresponseMessage: {11}'.format(
+                self.isBusinessCard, self.cardType, self.bankName, self.prefixNo, self.eftCode, self.brand,
+                self.avoidPreauthInstall, self.avoidAuthInstall, self.network, self.brandName, self.responseCode,
+                self.responseMessage)
 
-load_dict = dict()
-inner_dict = dict()
 
-for a in data_list:
-    inner_dict = dict()
-    for b in data_list[a]:
-        inner_dict[str(b[0])] = b[1]
-    load_dict[str(a)] = inner_dict
+def seperate_dictionary():
+    a = 1
+    for _ in real_data:
+        object_string = _.replace('{', '').replace('}', '')
+        object_string = object_string.replace('"', "").replace("'", "").split(',')
+        split_list = list()
+        prefix_name = ''
+        for _ in object_string:
+            item_key = _.split(': ')[0]
+            item_value = _.split(': ')[1]
+            if 'prefixno' in item_key.lower():
+                prefix_name = item_value
+            if str(item_value).replace("'", "") == 'false':
+                item_value = False
+            if str(item_value).replace("'", "") == 'true':
+                item_value = True
 
-for _ in sorted(load_dict):
-    print(_, ':', load_dict[_])
-    for a, b in load_dict[_].items():
-        print(a, b)
+            split_list.append([item_key, item_value])
 
-# print(load_dict['979300'])
+        data_list[prefix_name] = list(split_list)
+        a += 1
+
+    load_dict = dict()
+
+    for a in data_list:
+        inner_dict = dict()
+        for b in data_list[a]:
+            inner_dict[str(b[0]).replace(" ", "")] = b[1]
+        load_dict[str(a)] = inner_dict
+
+    return load_dict
+
+
+def find_binumber(bin_bumber: str) -> BinNumbers:
+    load_dict = seperate_dictionary()
+    load_dict = load_dict[str(bin_bumber)]
+    bin_numbers = BinNumbers()
+    bin_numbers.isBusinessCard = bool(load_dict['isBusinessCard'])
+    bin_numbers.cardType = str(load_dict['cardType'])
+    bin_numbers.bankName = str(load_dict['bankName'])
+    bin_numbers.prefixNo = str(load_dict['prefixNo'])
+    bin_numbers.eftCode = bool(load_dict['eftCode'])
+    bin_numbers.brand = bool(load_dict['brand'])
+    bin_numbers.avoidPreauthInstall = bool(load_dict['avoidPreauthInstall'])
+    bin_numbers.avoidAuthInstall = bool(load_dict['avoidAuthInstall'])
+    bin_numbers.network = bool(load_dict['network'])
+    bin_numbers.brandName = bool(load_dict['brandName'])
+    bin_numbers.responseCode = bool(load_dict['responseCode'])
+    bin_numbers.responseMessage = bool(load_dict['brand'])
+
+    return bin_numbers
+
+
+def give_all_bin_numbers(load_dict):
+    for _ in sorted(load_dict):
+        print(_, '-*********************************************')
+        for a, b in load_dict[_].items():
+            print(a, b)
+
+
+# load_dict = seperate_dictionary()
+# give_all_bin_numbers(load_dict)
+bin_number = find_binumber('979300')
+print(bin_number)
+
+# print('979267 :', load_dict['979300'])
 
