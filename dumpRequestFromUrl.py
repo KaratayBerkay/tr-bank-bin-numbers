@@ -121,7 +121,6 @@ url = 'https://ppgpayment-test.birlesikodeme.com:20000/api/ppg/Payment/BinList'
 bin_number_list_all, loaded_dict = get_bin_number_list(url=url)   # Get bin_number_list_all and loaded_dict
 bank_list = get_bank_list(bin_number_list_all)      # Get bank_list
 
-print(loaded_dict)
 a_list = list(print(_) for _ in bin_number_list_all)    # print items in Bin Number list
 b_list = list(print(_) for _ in bank_list)    # print items in Bank list
 print('Length of banks :', len(bank_list))   # Total Bank Count
