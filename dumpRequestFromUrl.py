@@ -93,14 +93,15 @@ def seperate_dictionary():
     return load_dict
 
 
-load_dict = seperate_dictionary()
-bin_numbers = BinNumbers(load_dict=load_dict)
-# bin_numbers.give_all_bin_numbers()
-bin_number_list = []
+load_dict = seperate_dictionary()   # Get whole dictionary into load object
+bin_numbers = BinNumbers(load_dict=load_dict)   # Get BinNumbers into numbers
+
+bin_number_list = []   # Append items into list then loop over
 for _ in load_dict:
     bin_number = bin_numbers.find_binumber(_)
     bin_number_list.append(bin_number)
 
+# See items in list
 for _ in bin_number_list:
     print(_)
 
