@@ -24,13 +24,40 @@ class BinNumbers:
     responseCode: bool
     responseMessage: bool
 
+    def __init__(self, load_dict):
+        self._load_dict = load_dict
+
     def __repr__(self):
-        return f'isBusinessCard: {0}\ncardType: {1}\nbankName: {2}\nprefixNo: {3}\neftCode: {4}\nbrand: {5}' \
-               f'\navoidPreauthInstall: {6}\navoidAuthInstall: {7}\nnetwork: {8}\nbrandName: {9}\nresponseCode: ' \
-               f'{10}\nresponseMessage: {11}'.format(
+        return '****\nisBusinessCard: {0}\ncardType: {1}\nbankName: {2}\nprefixNo: {3}\neftCode: {4}\nbrand: {5}' \
+               '\navoidPreauthInstall: {6}\navoidAuthInstall: {7}\nnetwork: {8}\nbrandName: {9}\nresponseCode: ' \
+               '{10}\nresponseMessage: {11}\n-----------------'.format(
                 self.isBusinessCard, self.cardType, self.bankName, self.prefixNo, self.eftCode, self.brand,
                 self.avoidPreauthInstall, self.avoidAuthInstall, self.network, self.brandName, self.responseCode,
                 self.responseMessage)
+
+    def give_all_bin_numbers(self):
+        for _ in sorted(self._load_dict):
+            print(_, '-*********************************************')
+            for a, b in self._load_dict[_].items():
+                print(a, b)
+
+    def find_binumber(self, bin_bumber: str):
+        load_dict = seperate_dictionary()
+        load_dict = load_dict[str(bin_bumber)]
+        bin_numbers = BinNumbers(load_dict=load_dict)
+        bin_numbers.isBusinessCard = bool(load_dict['isBusinessCard'])
+        bin_numbers.cardType = str(load_dict['cardType'])
+        bin_numbers.bankName = str(load_dict['bankName'])
+        bin_numbers.prefixNo = str(load_dict['prefixNo'])
+        bin_numbers.eftCode = str(load_dict['eftCode'])
+        bin_numbers.brand = str(load_dict['brand'])
+        bin_numbers.avoidPreauthInstall = bool(load_dict['avoidPreauthInstall'])
+        bin_numbers.avoidAuthInstall = bool(load_dict['avoidAuthInstall'])
+        bin_numbers.network = str(load_dict['network'])
+        bin_numbers.brandName = bool(load_dict['brandName'])
+        bin_numbers.responseCode = bool(load_dict['responseCode'])
+        bin_numbers.responseMessage = bool(load_dict['responseMessage'])
+        return bin_numbers
 
 
 def seperate_dictionary():
@@ -66,37 +93,15 @@ def seperate_dictionary():
     return load_dict
 
 
-def find_binumber(bin_bumber: str) -> BinNumbers:
-    load_dict = seperate_dictionary()
-    load_dict = load_dict[str(bin_bumber)]
-    bin_numbers = BinNumbers()
-    bin_numbers.isBusinessCard = bool(load_dict['isBusinessCard'])
-    bin_numbers.cardType = str(load_dict['cardType'])
-    bin_numbers.bankName = str(load_dict['bankName'])
-    bin_numbers.prefixNo = str(load_dict['prefixNo'])
-    bin_numbers.eftCode = bool(load_dict['eftCode'])
-    bin_numbers.brand = bool(load_dict['brand'])
-    bin_numbers.avoidPreauthInstall = bool(load_dict['avoidPreauthInstall'])
-    bin_numbers.avoidAuthInstall = bool(load_dict['avoidAuthInstall'])
-    bin_numbers.network = bool(load_dict['network'])
-    bin_numbers.brandName = bool(load_dict['brandName'])
-    bin_numbers.responseCode = bool(load_dict['responseCode'])
-    bin_numbers.responseMessage = bool(load_dict['brand'])
+load_dict = seperate_dictionary()
+bin_numbers = BinNumbers(load_dict=load_dict)
+# bin_numbers.give_all_bin_numbers()
+bin_number_list = []
+for _ in load_dict:
+    bin_number = bin_numbers.find_binumber(_)
+    bin_number_list.append(bin_number)
 
-    return bin_numbers
+for _ in bin_number_list:
+    print(_)
 
-
-def give_all_bin_numbers(load_dict):
-    for _ in sorted(load_dict):
-        print(_, '-*********************************************')
-        for a, b in load_dict[_].items():
-            print(a, b)
-
-
-# load_dict = seperate_dictionary()
-# give_all_bin_numbers(load_dict)
-bin_number = find_binumber('979300')
-print(bin_number)
-
-# print('979267 :', load_dict['979300'])
 
