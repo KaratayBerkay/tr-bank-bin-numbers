@@ -7,7 +7,6 @@ Turkish bank bin numbers and schemas
 ## Requirements
 
 * [Python ^3.10.0](https://www.python.org/ftp/python/3.10.0/Python-3.10.0.tgz)
-* [Postgresql](https://www.postgresql.org)
 * [Pycharm](https://www.jetbrains.com/pycharm)
 
 ## Preparation
