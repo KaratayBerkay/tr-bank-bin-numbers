@@ -31,7 +31,13 @@ class BinNumbers:
         load_dict = self._load_dict[str(bin_number)]
         bin_numbers = BinNumbers(load_dict=load_dict)
         bin_numbers.isBusinessCard = bool(load_dict['isBusinessCard'])
+
         bin_numbers.cardType = str(load_dict['cardType'])
+        if bin_numbers.cardType == 'C':
+            bin_numbers.cardType = 'Credit Card'
+        elif bin_numbers.cardType == 'P' or bin_numbers.cardType == 'D' or bin_numbers.cardType == 'X':
+            bin_numbers.cardType = 'Debit Card'
+
         bin_numbers.bankName = str(load_dict['bankName'])
         bin_numbers.prefixNo = str(load_dict['prefixNo'])
         bin_numbers.eftCode = str(load_dict['eftCode'])
@@ -80,11 +86,27 @@ def seperate_dictionary(real_data):
 
 
 def get_bank_list(bin_number_list):
-    bank_list = []
+    # todo Card Type D, P = Debit C = Credit Card
+    bank_list = {}
     for _ in bin_number_list:
         _bank_name = str(_.bankName).upper()
+        empty_dict = dict()
+        empty_dict['isBusinessCard'] = _.isBusinessCard
+        empty_dict['cardType'] = _.cardType
+        if empty_dict['cardType'] == 'C':
+            empty_dict['cardType'] = 'Credit Card'
+        elif empty_dict['cardType'] == 'P' or empty_dict['cardType'] == 'D' or empty_dict['cardType'] == 'X':
+            empty_dict['cardType'] = 'Debit Card'
+        empty_dict['bankName'] = _.bankName
+        empty_dict['eftCode'] = _.eftCode
+        empty_dict['brand'] = _.brand
+        empty_dict['avoidPreauthInstall'] = _.avoidPreauthInstall
+        empty_dict['avoidAuthInstall'] = _.avoidAuthInstall
+        empty_dict['network'] = _.network
+        empty_dict['brandName'] = _.brandName
+
         if _bank_name not in bank_list:
-            bank_list.append(_bank_name)
+            bank_list[_bank_name] = empty_dict
     return bank_list
 
 
@@ -117,11 +139,12 @@ def get_bin_number_list(url: str):
     return bin_number_list_all, loaded_dict
 
 
+# todo Card Type D, P = Debit C = Credit Card
 url = 'https://ppgpayment-test.birlesikodeme.com:20000/api/ppg/Payment/BinList'
 bin_number_list_all, loaded_dict = get_bin_number_list(url=url)   # Get bin_number_list_all and loaded_dict
 bank_list = get_bank_list(bin_number_list_all)      # Get bank_list
 
 a_list = list(print(_) for _ in bin_number_list_all)    # print items in Bin Number list
-b_list = list(print(_) for _ in bank_list)    # print items in Bank list
+b_list = list(print(a, '\n', b, '\n') for a, b in bank_list.items())    # print items in Bank list
 print('Length of banks :', len(bank_list))   # Total Bank Count
 
