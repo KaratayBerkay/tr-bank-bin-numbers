@@ -100,10 +100,7 @@ def get_bank_list(bin_number_list):
         empty_dict['bankName'] = _.bankName
         empty_dict['eftCode'] = _.eftCode
         empty_dict['brand'] = _.brand
-        empty_dict['avoidPreauthInstall'] = _.avoidPreauthInstall
-        empty_dict['avoidAuthInstall'] = _.avoidAuthInstall
         empty_dict['network'] = _.network
-        empty_dict['brandName'] = _.brandName
 
         if _bank_name not in bank_list:
             bank_list[_bank_name] = empty_dict
@@ -120,7 +117,7 @@ def all_bin_numbers_to_list(load_dict):
 
 
 def get_request_from_url(request_url: str) -> dict:
-    get_bin_numbers = request(method='Get', url=url)  # get bin numbers from url request
+    get_bin_numbers = request(method='Get', url=request_url)  # get bin numbers from url request
     request_json = get_bin_numbers.json()  # Get .json result
     return request_json['result']
 
@@ -145,6 +142,6 @@ bin_number_list_all, loaded_dict = get_bin_number_list(url=url)   # Get bin_numb
 bank_list = get_bank_list(bin_number_list_all)      # Get bank_list
 
 a_list = list(print(_) for _ in bin_number_list_all)    # print items in Bin Number list
-b_list = list(print(a, '\n', b, '\n') for a, b in bank_list.items())    # print items in Bank list
+b_list = list(print(a, ' : ', b) for a, b in bank_list.items())    # print items in Bank list
 print('Length of banks :', len(bank_list))   # Total Bank Count
 
