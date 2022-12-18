@@ -90,26 +90,38 @@ def get_bank_list(bin_number_list):
 
 def all_bin_numbers_to_list(load_dict):
     bin_number_list = []
+    bin_numbers = BinNumbers(load_dict=load_dict)
     for _ in load_dict:
         bin_number = bin_numbers.find_bin_number(_)
         bin_number_list.append(bin_number)
     return bin_number_list
 
 
+def get_request_from_url(request_url: str) -> dict:
+    get_bin_numbers = request(method='Get', url=url)  # get bin numbers from url request
+    request_json = get_bin_numbers.json()  # Get .json result
+    return request_json['result']
+
+
+def get_realm_data(request_result):
+    realm_data = json.dumps(request_result, ensure_ascii=False)  # Check for Turkish charset in keyboard
+    realm_data = realm_data.strip(' ] ').strip('[ ').split('},')  # Split data string to listable object
+    return realm_data
+
+
+def get_bin_number_list(url: str):
+    request_result = get_request_from_url(request_url=url)  # Get result of .json only
+    realm_data = get_realm_data(request_result=request_result)   # Get request and pull out results from dictionary
+    loaded_dict = seperate_dictionary(real_data=realm_data)  # Get whole dictionary into load object
+    bin_number_list_all = all_bin_numbers_to_list(load_dict=loaded_dict)  # Append items into list then loop over
+    return bin_number_list_all, loaded_dict
+
+
 url = 'https://ppgpayment-test.birlesikodeme.com:20000/api/ppg/Payment/BinList'
-get_bin_numbers = request(method='Get', url=url)   # get bin numbers from url request
-request_json = get_bin_numbers.json()  # Get .json result
-request_result = request_json['result']    # Get result of .json only
-realm_data = json.dumps(request_result, ensure_ascii=False)   # Check for Turkish charset in keyboard
-realm_data = realm_data.strip(' ] ').strip('[ ').split('},')  # Split data string to listable object
-
-
-loaded_dict = seperate_dictionary(real_data=realm_data)   # Get whole dictionary into load object
-bin_numbers = BinNumbers(load_dict=loaded_dict)   # Get BinNumbers into numbers
-bin_number_list_all = all_bin_numbers_to_list(load_dict=loaded_dict)  # Append items into list then loop over
-
+bin_number_list_all, loaded_dict = get_bin_number_list(url=url)   # Get bin_number_list_all and loaded_dict
 bank_list = get_bank_list(bin_number_list_all)      # Get bank_list
 
+print(loaded_dict)
 a_list = list(print(_) for _ in bin_number_list_all)    # print items in Bin Number list
 b_list = list(print(_) for _ in bank_list)    # print items in Bank list
 print('Length of banks :', len(bank_list))   # Total Bank Count
