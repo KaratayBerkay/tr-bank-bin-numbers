@@ -35,15 +35,8 @@ class BinNumbers:
                 self.avoidPreauthInstall, self.avoidAuthInstall, self.network, self.brandName, self.responseCode,
                 self.responseMessage)
 
-    def give_all_bin_numbers(self):
-        for _ in sorted(self._load_dict):
-            print(_, '-*********************************************')
-            for a, b in self._load_dict[_].items():
-                print(a, b)
-
-    def find_binumber(self, bin_bumber: str):
-        load_dict = seperate_dictionary()
-        load_dict = load_dict[str(bin_bumber)]
+    def find_bin_number(self, bin_number: str):
+        load_dict = self._load_dict[str(bin_number)]
         bin_numbers = BinNumbers(load_dict=load_dict)
         bin_numbers.isBusinessCard = bool(load_dict['isBusinessCard'])
         bin_numbers.cardType = str(load_dict['cardType'])
@@ -93,16 +86,30 @@ def seperate_dictionary():
     return load_dict
 
 
+def get_bank_list(bin_number_list):
+    bank_list = []
+    for _ in bin_number_list:
+        _bank_name = str(_.bankName).upper()
+        if _bank_name not in bank_list:
+            bank_list.append(_bank_name)
+    return bank_list
+
+
 load_dict = seperate_dictionary()   # Get whole dictionary into load object
 bin_numbers = BinNumbers(load_dict=load_dict)   # Get BinNumbers into numbers
 
 bin_number_list = []   # Append items into list then loop over
+
 for _ in load_dict:
-    bin_number = bin_numbers.find_binumber(_)
+    bin_number = bin_numbers.find_bin_number(_)
     bin_number_list.append(bin_number)
 
-# See items in list
-for _ in bin_number_list:
+bank_list = get_bank_list(bin_number_list)      # Get bank_list
+
+for _ in bin_number_list:   # print items in list
     print(_)
 
+print(len(bank_list))
+for _ in bank_list:
+    print(_)
 
